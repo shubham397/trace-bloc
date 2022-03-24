@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Client</title>
+    <style>
+      .container {
+        width: 80%;
+        margin: 1rem auto;
+      }
+
+      .text-justify {
+        text-align: justify;
+      }
+
+      #messages {
+        margin: 1rem auto;
+        width: 80%;
+        height: 200px;
+        border: 1px solid black;
+      }
+    </style>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"
+      integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="messages"></div>
+    </div>
+
+    <div class="container">
+      <center>
+        <label>Msg - </label>
+        <input id="msg" type="text" name="msg" />
+        <br />
+        <br />
+        <label style="margin-left: 10px">To - </label>
+        <input id="to" type="text" name="to" />
+        <br />
+        <br />
+        <button id="message-btn" style="margin-left: 20px" type="button">
+          Send Message
+        </button>
+      </center>
+    </div>
+    <script>
+      var socket = io();
+	  console.log(socket)
+      var btn = document.getElementById("message-btn");
+      var msg = document.getElementById("msg");
+      var to = document.getElementById("to");
+      var messageObj = {};
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        messageObj = {
+          message: msg.value,
+          to: to.value,
+		  timestamp: Date.now()
+        };
+
+        socket.emit("message-send-event", messageObj);
+      });
+      socket.on("update-message", function (message) {
+        console.log(message);
+        document.getElementById("messages").innerHTML = message.message;
+      });
+    </script>
+  </body>
+</html>
