@@ -61,7 +61,7 @@
             from: url.split("/")[4],
             message: msg.value,
             to: to.value,
-            timestamp: Date.now(),
+            timestamp: Date.now(), 
           };
 
           socket.emit("message-send-event", messageObj);
