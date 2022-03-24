@@ -56,12 +56,14 @@
       let messageObj = {};
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-        if (to.value && msg.value) {
+		var encryptMsg = window.btoa(msg.value);
+		//console.log(window.atob(encryptedAES))
+        if (to.value || msg.value) {
           messageObj = {
             from: url.split("/")[4],
-            message: msg.value,
+            message: encryptMsg,
             to: to.value,
-            timestamp: Date.now(), 
+            timestamp: Date.now(),
           };
 
           socket.emit("message-send-event", messageObj);
@@ -74,7 +76,7 @@
       socket.on("update-message" + url.split("/")[4], function (message) {
         document.getElementById(
           "messages"
-        ).innerHTML += `<label>From client - ${message.from}</label> : ${message.message}<br>`;
+        ).innerHTML += `<label>From client - ${message.from}</label> : ${message.message.split(':')[2]}<br>`;
       });
     </script>
   </body>

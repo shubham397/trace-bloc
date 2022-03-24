@@ -1,6 +1,8 @@
 var app = require("express")();
 var http = require("http").createServer(app);
 var io = require("socket.io")(http);
+var atob = require("atob");
+var btoa = require("btoa");
 
 const PORT = 3000;
 
@@ -23,6 +25,12 @@ io.on("connection", function (socket) {
   });
 
   socket.on("message-send-event", function (message) {
+    if(message.message.length>10){
+        message.message = atob(message.message)+"::VERIFIED";
+    }
+    else{
+        message.message = atob(message.message)+"::UNVERIFIED";
+    }
     io.emit("update-message" + message.to, message);
   });
 });
