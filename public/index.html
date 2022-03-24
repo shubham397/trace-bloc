@@ -48,25 +48,33 @@
       </center>
     </div>
     <script>
-      var socket = io();
-	  console.log(socket)
-      var btn = document.getElementById("message-btn");
-      var msg = document.getElementById("msg");
-      var to = document.getElementById("to");
-      var messageObj = {};
+      let socket = io();
+      let btn = document.getElementById("message-btn");
+      let msg = document.getElementById("msg");
+      let to = document.getElementById("to");
+      let url = window.location.href;
+      let messageObj = {};
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-        messageObj = {
-          message: msg.value,
-          to: to.value,
-		  timestamp: Date.now()
-        };
+        if (to.value && msg.value) {
+          messageObj = {
+            from: url.split("/")[4],
+            message: msg.value,
+            to: to.value,
+            timestamp: Date.now(),
+          };
 
-        socket.emit("message-send-event", messageObj);
+          socket.emit("message-send-event", messageObj);
+          msg.value = "";
+          to.value = "";
+        } else {
+          return alert("Please fill");
+        }
       });
-      socket.on("update-message", function (message) {
-        console.log(message);
-        document.getElementById("messages").innerHTML = message.message;
+      socket.on("update-message" + url.split("/")[4], function (message) {
+        document.getElementById(
+          "messages"
+        ).innerHTML += `<label>From client - ${message.from}</label> : ${message.message}<br>`;
       });
     </script>
   </body>

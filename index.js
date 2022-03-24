@@ -17,14 +17,12 @@ http.listen(PORT, function () {
 });
 
 io.on("connection", function (socket) {
-  console.log(socket.Socket);
   console.log("user connected");
   socket.on("disconnect", function () {
     console.log("user disconnected");
   });
 
   socket.on("message-send-event", function (message) {
-    console.log(message);
-    io.emit("update-message", message);
+    io.emit("update-message" + message.to, message);
   });
 });
